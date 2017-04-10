@@ -96,11 +96,14 @@ Movies: ID (primary key), movie_title, director, rating, lead_actor_male, lead_a
 * List, in English, 2 queries you'll want to make from your database. At least one should be a JOIN. You can always change these later, but start with  ideas you're interested in and lessen the work on yourself later on! 
 (e.g. from class examples, maybe "I want to make a query that accesses the numbers of times each user has favorited tweets, and the number of times tweets that user posted have been favorited -- so I'll be joining the Tweets table and the Users table")
 
+I want to make a query that accesses the the title of a movie, the movie’s rating, and the top actor and actress in the movie where the rating is above a 4.5/5; this involves the Movie table.  
+
+I want to make a query that accesses the top male or female actor in a specific movie and the last 20 tweets they made; this joins the User table and Movie table.
 
 
 * What are at least 2 of the data processing mechanics you're planning to use? 
 
-
+Dictionary accumulation and set comprehension.
 
 
 * Why will each of those be useful to you? What data might you use it on? 
