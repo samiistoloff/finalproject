@@ -110,8 +110,12 @@ Dictionary accumulation and set comprehension.
 (e.g. "Set comprehension: I think I'm going to be looking for unique names and proper nouns in this big set of text, so I'm going to use a set comprehension"). 
 >>>This is especially important if you are doing Option 3, but it's important for everyone!<<<
 
+Dictionary accumulation: I think I’m going to be looking for the most popular words associated with an actor’s name, associating that word with the actor.
 
+Set Comprehension: I think I’m going to be looking for how many users tweeted about a single movie title, and set comprehension will be useful so make sure that each user is only accounted for once. 
 
 
 * What will your output look like? Will it be a .txt file? a CSV file? something else? What information will it contain? >>>This is especially important if you are doing Option 3, but it's important for everyone!<<<
+
+My output will be a .txt file containing information on the most popular movies that are being talked about right now.  It will contain information form the 5 most talked about movies from the past month. 
 
