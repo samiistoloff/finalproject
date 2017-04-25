@@ -9,6 +9,8 @@ import json
 import re
 import tweepy
 import twitter_info
+import collections
+import itertools
 
 # Authentication information should be in a twitter_info file...
 # consumer_key = twitter_info.consumer_key
@@ -127,21 +129,29 @@ statement_2 = 'INSERT OR IGNORE INTO Users VALUES (?, ?, ?)'
 statement_3 = 'INSERT OR IGNORE INTO Movies VALUES (?, ?, ?, ?, ?, ?)'
 
 
-# create a class for Movie, 
-# def  __init__ constructor will have self and the movie dictionary
-# self. movie, title, year, ID, director, rating, 
+class Movie():
+	def __init__(self, movie_dictionary):
+		self.movie_id = movie_dictionary['imdbID']
+		self.movie = movie_dictionary
+		self.title = movie_dictionary['Title']
+		self.year = movie_dictionary['Year']
+		self.director = movie_dictionary['Director']
+		self.rating = movie_dictionary['imdbRating']
 
-# def get_actor will have self 
-# will return the actor names
+	def get_actor_names(self):
+		actor_names = self.movie['Actors']
+		return actor_names
 
-# def create movie table, just self
-# will split the actor names and then will take the first actor from the list as the lead role, 
-# still need to think about how to distinguish between male and female
-# everything else will also be input whihc is ID, title, director, rating, and actors
+	def create_movie_table(self):
+		actor_names = Movie.get_actor(self)
+		actor_list = actor_names.split(", ")
+		lead_role = actor_list[0]
+		t = self.movie_id, self.title, self.director, self.rating, lead_role
 
-# def __str__ just self
-# creates a summary of the movie by puttin all of the information together
-# movie was directed by director in 
+	def __str__(self):
+		return self.title + " stars the actors " + self.get_actor_names + " and was driected by " + self.director + " in " + self.year ".  It has an IMDB rating of " + self.rating + "."
+
+
 
 # Write your test cases here.
 
