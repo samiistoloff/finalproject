@@ -314,21 +314,25 @@ print ("\n\n BELOW THIS LINE IS OUTPUT FROM TESTS:\n")
 
 class TestCases(unittest.TestCase):
 
-	def test_tweet_caching(self):
-		name ="SI206_finalproject_cache.json"
-		f = open(name, 'r')
-		self.assertTrue("21 Jump Street" in f.read())
-		f.close()
-
-	def test_movie_caching(self):
+	def test_movie_cache(self):
 		name ="SI206_finalproject_cache.json"
 		f = open(name, 'r')
 		self.assertTrue("OMDb_LaLaLand" in f.read())
 		f.close()
 
+	def test_tweet_cache(self):
+		name ="SI206_finalproject_cache.json"
+		f = open(name, 'r')
+		self.assertTrue("21 Jump Street" in f.read())
+		f.close()
+
 	def test_get_user_tweets(self):
 		result = get_twitter_info("#21jumpstreet")
 		self.assertEqual(type(result), type(['eieio', 2]))
+
+	def test_get_user_tweets_1(self):
+		l = get_twitter_info("#21jumpstreet")
+		self.assertEqual(type(l[1]), type({}))
 
 	def test_movie_title(self):
 		movie = get_movie_info("21jumpstreet")
@@ -340,23 +344,19 @@ class TestCases(unittest.TestCase):
 		m = Movie(movie)
 		self.assertEqual(type(m.get_actor_names()), type('eieio'))
 
-	def test_movies3(self):
+	def test_movies(self):
 		self.assertEqual(len(movies), 4)
-
-	def test_get_user2(self):
-		l = get_twitter_info("#21jumpstreet")
-		self.assertEqual(type(l[1]), type({}))
 
 	def test_str(self):
 		movie = get_movie_info("A Dog's Purpose")
 		m = Movie(movie)
 		self.assertIn(str(m.title), m.__str__())
 
-	def test_tweet_table_method(self):
-		self.assertIn(twitter_instance[0].text, twitter_instance[0].create_twitter_table())
-
 	def test_tweet_class(self):
 		self.assertIn(twitter_instance[0].associated_movie, ["21 Jump Street", "La La Land", "A Dog's Purpose", "Zootopia"])
+
+	def test_tweet_table_method(self):
+		self.assertIn(twitter_instance[0].text, twitter_instance[0].create_twitter_table())
 
 	def test_user_table_method(self):
 		self.assertIn(twitter_instance[0].userid, twitter_instace[0].create_users_table())

@@ -22,31 +22,133 @@ import twitter_info
 # api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 
 # # And we've provided the setup for your cache. But we haven't written any functions for you, so you have to be sure that any function that gets data from the internet relies on caching, just like in Project 2.
-# CACHE_FNAME = "206_final_cache.json"
-# try:
-# 	cache_file = open(CACHE_FNAME,'r')
-# 	cache_contents = cache_file.read()
-# 	cache_file.close()
-# 	CACHE_DICTION = json.loads(cache_contents)
-# except:
-# 	CACHE_DICTION = {}
+CACHE_FNAME = "206_final_cache.json"
+try:
+	cache_file = open(CACHE_FNAME,'r')
+	cache_contents = cache_file.read()
+	cache_file.close()
+	CACHE_DICTION = json.loads(cache_contents)
+except:
+	CACHE_DICTION = {}
 
 
 # # Define your function get_user_tweets here:
 
-# def get_user_tweets(user):
-# 	twit_user = "twitter_{}".format(user) 
-# 	if twit_user in CACHE_DICTION:
-# 		print(user)
-# 		pass
-# 	else:
-# 		print(user)
-# 		results = api.user_timeline(user) 
-# 		CACHE_DICTION[twit_user] = results 
-# 		f = open(CACHE_FNAME,'w') 
-# 		f.write(json.dumps(CACHE_DICTION)) 
-# 		f.close() 
-# 	return CACHE_DICTION[twit_user]
+def get_user_tweets(user):
+	twit_user = "twitter_{}".format(user) 
+	if twit_user in CACHE_DICTION:
+		print(user)
+		pass
+	else:
+		print(user)
+		results = api.user_timeline(user) 
+		CACHE_DICTION[twit_user] = results 
+		f = open(CACHE_FNAME,'w') 
+		f.write(json.dumps(CACHE_DICTION)) 
+		f.close() 
+	return CACHE_DICTION[twit_user]
+
+
+# Caching twitter info about a movie	
+# Enables you to search for a title of a movie and find the tweets that include the name of the movie.
+
+def get_twitter_info(twitter_info):
+	search_twitter = "twitter_{}".format(twitter_info)
+	if search_twitter in CACHE_DICTION:
+		print ("using cached data for", twitter_info)
+		print ("\n")
+		twitter_results = CACHE_DICTION[search_twitter]
+	else:
+		print ("getting data from internet for", twitter_info)
+		print ("\n")
+		twitter_results = api.twitter_info(q = twitter_info)
+		CACHE_DICTION[search_twitter] = twitter_results
+		f = open(CACHE_FNAME, 'w')
+		f.write(json.dumps(CACHE_DICTION))
+		f.close()
+		
+	tweets = twitter_results['statuses']
+	return tweets
+
+# Pull data from OMDb API and cache it
+# Takes an input of a movie name and returns a dictionary of info about the movie, caches, and returns the cache file.
+
+def get_movie_info(movie_info):
+	search_movie = "OMBb_{}".format(movie_info)
+	if search_movie in CACHE_DICTION:
+		print ("Using cached data for", movie_info)
+		print("\n")
+		movie_dictionary = CACHE_DICTION[search_movie]
+	else:
+		print ("getting data for", movie_info)
+		print ("\n")
+		baseurl = 'http://www.omdbapi.com/?'
+		url_params = {'t': movie_info}
+		response = requests.get(baseurl, params = url_params)
+		movie_dictionary = response.json()
+		CACHE_DICTION[search_movie] = movie_dictionary
+		f = open(CACHE_FNAME, 'w')
+		f.write(json.dumps(CACHE_DICTION))
+		f.close()
+
+	return movie_dictionary
+
+print (json.dumps(get_movie_info("Frozen"), indent = 2))
+
+t_connect = sqlite3.connect('stoloff_final.db')
+t_cursor = t_connect.cursor()
+
+t_cursor.execute('DROP TABLE IF EXISTS stoloff_final')
+
+# create table for tweets
+c_table = 'CREATE TABLE IF NOT EXISTS '
+c_table += 'Tweets (tweet_id TEXT PRIMARY KEY, '
+c_table += 'tweet_text TEXT, twitter_user TEXT, movie_association TEXT, retweet_num INTEGER, favorite_num INTEGER)'
+
+t_cursor.execute(c_table)
+
+# create table for users
+c_table = 'CREATE TABLE IF NOT EXISTS '
+c_table += 'Users (user_id TEXT PRIMARY KEY, '
+c_table += 'user_handle TEXT, user_favorites INTEGER)'
+
+t_cursor.execute(c_table)
+
+# create table for movies
+c_table = 'CREATE TABLE IF NOT EXISTS '
+c_table += 'Movies (movie_id TEXT PRIMARY KEY, ' #The movie ID will be the primary key
+c_table += 'movie_title TEXT, director TEXT, rating INTEGER, lead_actor_m TEXT, lead_actor_f TEXT)'
+
+t_cursor.execute(c_table)
+
+
+statement_1 = 'INSERT OR IGNORE INTO Tweets VALUES (?, ?, ?, ?, ?, ?)'
+statement_2 = 'INSERT OR IGNORE INTO Users VALUES (?, ?, ?)'
+statement_3 = 'INSERT OR IGNORE INTO Movies VALUES (?, ?, ?, ?, ?, ?)'
+
+
+# create a class for Movie, 
+# def  __init__ constructor will have self and the movie dictionary
+# self. movie, title, year, ID, director, rating, 
+
+# def get_actor will have self 
+# will return the actor names
+
+# def create movie table, just self
+# will split the actor names and then will take the first actor from the list as the lead role, 
+# still need to think about how to distinguish between male and female
+# everything else will also be input whihc is ID, title, director, rating, and actors
+
+# def __str__ just self
+# creates a summary of the movie by puttin all of the information together
+# movie was directed by director in year and has a score of number ->> format
+
+# create a class for Tweet
+# def __init__ self and twitter dictionary
+# twitter query, ID, handle, retweets, favorite, text
+
+
+
 
 # Write your test cases here.
 
